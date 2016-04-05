@@ -8,8 +8,21 @@
   		 <script src="../js/jquery-2.1.0.js"></script>
 <!--    		<script src="../js/bootstrap.min.js"></script>	 -->
         <script src="../js/lzh_img_crop.js"></script>
+        <style type="text/css">
+        .canvas_cover{
+          position: absolute;
+          top:0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          opacity: 0.5;
+          pointer-events: none;
+        }
+        </style>
       <script type="text/javascript">
         $(document).ready(function () {
+           $(".canvas_cover").css("width",0)
+           $(".canvas_cover").css("height",0)
           $("#myfile").change(function(e){
             var file = e.target.files[0]
             if(file){
@@ -39,7 +52,10 @@
    		</head>
 	<body>
 		<input type="file" id="myfile"/>
+    <div calss="canvas_parent">
 		<canvas id="mycan"></canvas>
+    <canvas id="canvas_cover" class="canvas_cover"></canvas>
+    </div>
         <canvas id="preview_can"></canvas>
         <button type="button" onclick="submit()">提交</button>
 	</body>
