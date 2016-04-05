@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/imgareaselect-default.css">
+  		 <script src="../js/jquery-2.1.0.js"></script>
+  		 <script src="../js/jquery.imgareaselect.min.js"></script>
+   		<script src="../js/bootstrap.min.js"></script>	
+   		<script type="text/javascript">
+   			$(document).ready(function () {
+   				$("#myfile").change(function(e){
+   					var file = e.target.files[0]
+   					if(file){
+   						var reader = new FileReader();
+                    	reader.onload=function(){
+                    		$('#ferret').attr("src",reader.result)
+                    		$("#upload_img").attr("src",reader.result)
+                    	}
+                    	reader.readAsDataURL(file);
+   					}
+   				})
+  				$('#myimg').imgAreaSelect({aspectRatio: '1:1' ,onSelectEnd: preview});
+			});
+			function preview(img, selection) {
+    var scaleX = 100 / (selection.width || 1);
+    var scaleY = 100 / (selection.height || 1);
+  
+    $('#ferret + div > img').css({
+        width: Math.round(scaleX * 400) + 'px',
+        height: Math.round(scaleY * 300) + 'px',
+        marginLeft: '-' + Math.round(scaleX * selection.x1) + 'px',
+        marginTop: '-' + Math.round(scaleY * selection.y1) + 'px'
+    });
+}
+
+$(document).ready(function () {
+    $('<div><img id="upload_img"  /><div>')
+        .css({
+            float: 'left',
+            position: 'relative',
+            overflow: 'hidden',
+            width: '100px',
+            height: '100px'
+        })
+        .insertAfter($('#ferret'));
+
+    $('#ferret').imgAreaSelect({ aspectRatio: '1:1', onSelectChange: preview });
+});
+   		</script>
+   		</head>
+	<body>
+		<input type="file" id="myfile"/>
+		<img src="" id="ferret" width="400" height="300" />
+		
+	</body>
+</html>
