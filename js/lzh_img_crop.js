@@ -1,5 +1,6 @@
 var crop_obj = null;
 function LzhImgCrop(image,canvaId,preview_canvaId,width,height){
+		 crop_obj = this;
 	 this.image = image;
 	 this.canvas = document.getElementById(canvaId);
 	 this.ctx = this.canvas.getContext('2d');
@@ -14,7 +15,7 @@ function LzhImgCrop(image,canvaId,preview_canvaId,width,height){
 	 this.mousedown = false;
 	 this.mouseup = false;
 	 this.selection = new Selection(0,0,0,0);
-	 crop_obj = this;
+
 	 this.canvas.width = this.width;
 	 this.canvas.height = this.height;
 	 this.preview_canvas.width = this.preview_width;
@@ -24,16 +25,12 @@ function LzhImgCrop(image,canvaId,preview_canvaId,width,height){
 	 this.canvas.onmousemove= this.CanvasMouseMove;
 	 this.canvas.onmouseup= this.CanvasMouseUp;
 	 this.canvas.onmouseout=this.CanvasMouseOut;
-
 	 this.drawImg();
 }
 
 LzhImgCrop.prototype.drawImg = function(){
 	this.ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
-	$(".canvas_cover").css('top',this.canvas.offsetTop)
-	$(".canvas_cover").css('left',this.canvas.offsetLeft)
-	$(".canvas_cover").css("width",this.width)
-	$(".canvas_cover").css("height",this.height)
+	
 	this.selection.ClearSelection();
 }
 
@@ -126,6 +123,10 @@ function Selection(x1,y1,x2,y2){
 	this.is_select = false;
 	this.canvas = document.getElementById("canvas_cover");
 	this.ctx=this.canvas.getContext("2d");
+	$(".canvas_cover").css("top",crop_obj.canvas.offsetTop);
+	$(".canvas_cover").css("left",crop_obj.canvas.offsetLeft);
+	this.canvas.width = crop_obj.width;
+	this.canvas.height = crop_obj.height
 	// this.canvas.onmousedown = function(e){
 	// 	alert("cover"+e.offsetX)
 	// }
