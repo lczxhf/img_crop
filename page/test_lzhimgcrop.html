@@ -30,7 +30,7 @@
                       reader.onload=function(){
                         var image=new Image();
                         image.src = reader.result;
-                        crop = new LzhImgCrop(image,'mycan','preview_can',image.naturalWidth,image.naturalHeight);
+                        crop = new LzhImgCrop(image,'mycan','canvas_cover',image.naturalWidth,image.naturalHeight);
                       }
                       reader.readAsDataURL(file);
             }
@@ -56,7 +56,6 @@
 		<canvas id="mycan"></canvas>
     <canvas id="canvas_cover" class="canvas_cover"></canvas>
     </div>
-        <canvas id="preview_can"></canvas>
         <button type="button" onclick="submit()">提交</button>
 	</body>
 </html>

@@ -1,25 +1,36 @@
 var crop_obj = null;
-function LzhImgCrop(image,canvaId,preview_canvaId,width,height){
+function LzhImgCrop(image,canvaId,can_cover,width,height,preview_canvaId){
 		 crop_obj = this;
 	 this.image = image;
 	 this.canvas = document.getElementById(canvaId);
 	 this.ctx = this.canvas.getContext('2d');
-	 this.preview_canvas = document.getElementById(preview_canvaId);
-	 this.preview_ctx = this.preview_canvas.getContext('2d');
 	 this.x = 0;
 	 this.y = 0;
 	 this.width = width;
 	 this.height = height;
-	 this.preview_width = 200;
-	 this.preview_height = 200;
+	 this.can_cover = can_cover
+	 this.is_preview = false;
+	 if (preview_canvaId){
+	   this.preview_canvas = document.getElementById(preview_canvaId);
+	   this.is_preview = true;
+	 }else{
+	 	$("<canvas id='auto_preview_canvas'></canvas>").insertAfter($(this.canvas))
+	 	this.preview_canvas = document.getElementById("auto_preview_canvas"); 
+	 	this.preview_canvas.style.display="none"
+	 }
+	  this.preview_ctx = this.preview_canvas.getContext('2d');
+	  this.preview_width = 200;
+	   this.preview_height = 200;
+	   this.preview_canvas.width = this.preview_width;
+	   this.preview_canvas.height = this.preview_height;
+
 	 this.mousedown = false;
 	 this.mouseup = false;
 	 this.selection = new Selection(0,0,0,0);
 
 	 this.canvas.width = this.width;
 	 this.canvas.height = this.height;
-	 this.preview_canvas.width = this.preview_width;
-	 this.preview_canvas.height = this.preview_height;
+	 
 	 
 	 this.canvas.onmousedown= this.CanvasMouseDown;
 	 this.canvas.onmousemove= this.CanvasMouseMove;
@@ -61,7 +72,9 @@ LzhImgCrop.prototype.CanvasMouseUp = function(e){
 		crop_obj.mousedown = false;
 		crop_obj.selection.x2 = e.offsetX;
 		crop_obj.selection.y2 = e.offsetY;
-		crop_obj.drawPreImg();
+		if (crop_obj.is_preview){ 
+			crop_obj.drawPreImg();
+		}
 		crop_obj.selection.is_select = true ;
 		crop_obj.selection.drawRect();
 	}
@@ -87,7 +100,9 @@ LzhImgCrop.prototype.CanvasMouseMove = function(e){
 		crop_obj.selection.y2 = e.offsetY;
 		
 		crop_obj.selection.ClearSelection();
-		crop_obj.drawPreImg();
+		if(crop_obj.is_preview){
+			crop_obj.drawPreImg();
+		}
 		crop_obj.selection.drawRect();
 	}
 }
@@ -104,6 +119,7 @@ LzhImgCrop.prototype.CanvasMouseOut = function(e){
 }
 
 LzhImgCrop.prototype.GetResultData = function(){
+	crop_obj.drawPreImg()
 	var data=this.preview_canvas.toDataURL();
 	data=data.split(',')[1];
 	data=window.atob(data);
@@ -121,10 +137,10 @@ function Selection(x1,y1,x2,y2){
 	this.y1 = y1;
 	this.y2 = y2;
 	this.is_select = false;
-	this.canvas = document.getElementById("canvas_cover");
+	this.canvas = document.getElementById(crop_obj.can_cover);
 	this.ctx=this.canvas.getContext("2d");
-	$(".canvas_cover").css("top",crop_obj.canvas.offsetTop);
-	$(".canvas_cover").css("left",crop_obj.canvas.offsetLeft);
+	$("#"+crop_obj.can_cover).css("top",crop_obj.canvas.offsetTop);
+	$("#"+crop_obj.can_cover).css("left",crop_obj.canvas.offsetLeft);
 	this.canvas.width = crop_obj.width;
 	this.canvas.height = crop_obj.height
 	// this.canvas.onmousedown = function(e){
@@ -133,8 +149,9 @@ function Selection(x1,y1,x2,y2){
 }
 
 Selection.prototype.ClearSelection = function(){
-
-	crop_obj.preview_ctx.clearRect(crop_obj.x,crop_obj.y,crop_obj.preview_width,crop_obj.preview_height)
+	if(crop_obj.is_preview){
+		crop_obj.preview_ctx.clearRect(crop_obj.x,crop_obj.y,crop_obj.preview_width,crop_obj.preview_height)
+	}
 	crop_obj.selection.ctx.fillStyle="gray";
 	crop_obj.selection.ctx.fillRect(0,0,crop_obj.width,crop_obj.height);
 }
