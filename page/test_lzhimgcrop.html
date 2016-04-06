@@ -30,7 +30,7 @@
                       reader.onload=function(){
                         var image=new Image();
                         image.src = reader.result;
-                        crop = new LzhImgCrop(image,'mycan','canvas_cover',400,300,'preview_canvas');
+                        crop = new LzhImgCrop(image,'mycan','canvas_cover',400,300,{preview_canvasId:'preview_canvas',preview_width:300,preview_height:200});
                       }
                       reader.readAsDataURL(file);
             }
