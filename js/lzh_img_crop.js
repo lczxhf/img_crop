@@ -292,10 +292,9 @@ function getOffset(e){
 
   // 计算光标到文档的距离
   eventCoord = {
-    X : window.pageXOffset + e.clientX,
-    Y : window.pageYOffset + e.clientY
+    X : e.pageX,
+    Y : e.pageY
   };
-
   // 相减获取光标到第一个定位的父元素的坐标
   offsetCoord = {
     X : eventCoord.X - pageCoord.X,
@@ -308,8 +307,8 @@ function getPageCoord(element)
   var coord = {X: 0, Y: 0};
   while (element)
   {
-    coord.x += element.offsetLeft;
-    coord.y += element.offsetTop;
+    coord.X += element.offsetLeft;
+    coord.Y += element.offsetTop;
     element = element.offsetParent;
   }
   return coord;
