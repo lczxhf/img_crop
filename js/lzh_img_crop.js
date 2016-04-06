@@ -50,8 +50,7 @@ function LzhImgCrop(image,canvaId,can_cover,width,height,option){
 }
 
 LzhImgCrop.prototype.drawImg = function(){
-	this.ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
-	
+	  this.ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
 	this.selection.ClearSelection();
 }
 
