@@ -18,7 +18,7 @@ function LzhImgCrop(image,canvaId,can_cover,width,height,preview_canvaId,preview
 	 }else{
 	 	$("<canvas id='auto_preview_canvas'></canvas>").insertAfter($(this.canvas))
 	 	this.preview_canvas = document.getElementById("auto_preview_canvas"); 
-	 	//this.preview_canvas.style.display="none"
+	 	this.preview_canvas.style.display="none"
 	 }
 	  this.preview_ctx = this.preview_canvas.getContext('2d');
 	  if(preview_width){
