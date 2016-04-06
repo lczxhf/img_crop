@@ -109,12 +109,12 @@ LzhImgCrop.prototype.CanvasMouseDown = function(e){
 	}else if(crop_obj.selection.is_select){
 		console.log("down_clear")
 		crop_obj.selection.ClearSelection();
-		crop_obj.selection.x1 = e.offsetX;
-		crop_obj.selection.y1 = e.offsetY;
+		crop_obj.selection.x1 = getOffset(e).X;
+		crop_obj.selection.y1 = getOffset(e).Y;
 	}else{
 		console.log("down")
-		crop_obj.selection.x1 = e.offsetX;
-		crop_obj.selection.y1 = e.offsetY;
+		crop_obj.selection.x1 = getOffset(e).X;
+		crop_obj.selection.y1 = getOffset(e).Y;
 	}
 		crop_obj.mousedown = true;
 		
@@ -128,8 +128,8 @@ LzhImgCrop.prototype.CanvasMouseMove = function(e){
 	
 	if(crop_obj.mousedown && crop_obj.selection.is_change_position){
 		console.log("move_change")
-			crop_obj.selection.move_x2 = e.offsetX;
-			crop_obj.selection.move_y2 = e.offsetY;
+			crop_obj.selection.move_x2 = getOffset(e).X;
+			crop_obj.selection.move_y2 = getOffset(e).Y;
 			crop_obj.selection.CountDistance()
 			crop_obj.selection.Move()
 			draw = true
@@ -137,8 +137,8 @@ LzhImgCrop.prototype.CanvasMouseMove = function(e){
 			// reduce_y = crop_obj.selection.move_y1 - crop_obj.selection.move_y2
 	}else if(crop_obj.mousedown){
 		console.log("move_select")
-		crop_obj.selection.x2 = e.offsetX;
-		crop_obj.selection.y2 = e.offsetY;
+		crop_obj.selection.x2 = getOffset(e).X;
+		crop_obj.selection.y2 = getOffset(e).Y;
 		crop_obj.selection.CountDistance()
 		draw = true
 	}
@@ -260,15 +260,15 @@ Selection.prototype.CountDistance = function(){
 	}
 }
 Selection.prototype.IsDownInside = function(e){
-	if (e.offsetX > this.start_x && e.offsetX < this.end_x && e.offsetY > this.start_y && e.offsetY < this.end_y){
+	if (getOffset(e).X > this.start_x && getOffset(e).X < this.end_x && getOffset(e).Y > this.start_y && getOffset(e).Y < this.end_y){
 		return true;
 	}
 	return false;
 }
 Selection.prototype.RecordMoveInfo = function(e){
 	this.is_change_position = true;
-	this.move_x1 = e.offsetX;
-	this.move_y1 = e.offsetY;
+	this.move_x1 = getOffset(e).X;
+	this.move_y1 = getOffset(e).Y;
 }
 Selection.prototype.Move = function(){
 	var reduce_x = this.move_x1 - this.move_x2
@@ -281,7 +281,37 @@ Selection.prototype.Move = function(){
 	this.move_y1 = this.move_y2
 
 }
+function getOffset(e){
+  var target = e.target, // 当前触发的目标对象
+      eventCoord,
+      pageCoord,
+      offsetCoord;
 
+  // 计算当前触发元素到文档的距离
+  pageCoord = getPageCoord(target);
 
+  // 计算光标到文档的距离
+  eventCoord = {
+    X : window.pageXOffset + e.clientX,
+    Y : window.pageYOffset + e.clientY
+  };
 
+  // 相减获取光标到第一个定位的父元素的坐标
+  offsetCoord = {
+    X : eventCoord.X - pageCoord.X,
+    Y : eventCoord.Y - pageCoord.Y
+  };
+  return offsetCoord;
+}
+function getPageCoord(element) 
+{
+  var coord = {X: 0, Y: 0};
+  while (element)
+  {
+    coord.x += element.offsetLeft;
+    coord.y += element.offsetTop;
+    element = element.offsetParent;
+  }
+  return coord;
+}
 
