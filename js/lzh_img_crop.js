@@ -1,5 +1,5 @@
 var crop_obj = null;
-function LzhImgCrop(image,canvaId,can_cover,width,height,preview_canvaId){
+function LzhImgCrop(image,canvaId,can_cover,width,height,preview_canvaId,preview_width,preview_height){
 		 crop_obj = this;
 	 this.image = image;
 	 this.canvas = document.getElementById(canvaId);
@@ -10,17 +10,27 @@ function LzhImgCrop(image,canvaId,can_cover,width,height,preview_canvaId){
 	 this.height = height;
 	 this.can_cover = can_cover
 	 this.is_preview = false;
+	 this.width_scale = image.naturalWidth / width;
+	 this.height_scale = image.naturalHeight / height;
 	 if (preview_canvaId){
 	   this.preview_canvas = document.getElementById(preview_canvaId);
 	   this.is_preview = true;
 	 }else{
 	 	$("<canvas id='auto_preview_canvas'></canvas>").insertAfter($(this.canvas))
 	 	this.preview_canvas = document.getElementById("auto_preview_canvas"); 
-	 	this.preview_canvas.style.display="none"
+	 	//this.preview_canvas.style.display="none"
 	 }
 	  this.preview_ctx = this.preview_canvas.getContext('2d');
-	  this.preview_width = 200;
-	   this.preview_height = 200;
+	  if(preview_width){
+	   this.preview_width = preview_width;
+	  }else{
+	  	this.preview_width = 100;
+	  }
+	  if(preview_height){
+	  	this.preview_height = preview_height;
+	  }else{
+	   this.preview_height = 100;
+	  }
 	   this.preview_canvas.width = this.preview_width;
 	   this.preview_canvas.height = this.preview_height;
 
@@ -62,8 +72,10 @@ LzhImgCrop.prototype.drawPreImg = function(){
 	// }else{
 	// 	start_y = this.selection.y2
 	// }
-
-	this.preview_ctx.drawImage(this.image,this.selection.start_x,this.selection.start_y,Math.abs(this.selection.reduce_x),Math.abs(this.selection.reduce_y),this.x,this.y,Math.abs(this.selection.reduce_x),Math.abs(this.selection.reduce_y))
+	//var imgData = this.ctx.getImageData(this.selection.start_x,this.selection.start_y,Math.abs(this.selection.reduce_x),Math.abs(this.selection.reduce_y))
+	//this.preview_ctx.putImageData(imgData,0,0,0,0,this.preview_width,this.preview_height)
+	this.preview_ctx.drawImage(this.image,this.selection.start_x*this.width_scale,this.selection.start_y*this.height_scale,Math.abs(this.selection.reduce_x*this.width_scale),Math.abs(this.selection.reduce_y*this.height_scale),this.x,this.y,this.preview_width,this.preview_height)
+	
 }
 
 LzhImgCrop.prototype.MoveDrawPreImg = function(){
@@ -151,6 +163,7 @@ LzhImgCrop.prototype.CanvasMouseOut = function(e){
 }
 
 LzhImgCrop.prototype.GetResultData = function(){
+	//var img = this.ctx.getImageData(this.selection.start_x,this.selection.start_y,Math.abs(this.selection.reduce_x),Math.abs(this.selection.reduce_y))
 	crop_obj.drawPreImg()
 	var data=this.preview_canvas.toDataURL();
 	data=data.split(',')[1];
