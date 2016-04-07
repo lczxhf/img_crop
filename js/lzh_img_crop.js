@@ -194,8 +194,8 @@ function Selection(x1,y1,x2,y2){
 	this.is_select = false;
 	this.canvas = document.getElementById(crop_obj.can_cover);
 	this.ctx=this.canvas.getContext("2d");
-	$("#"+crop_obj.can_cover).css("top",crop_obj.canvas.offsetTop);
-	$("#"+crop_obj.can_cover).css("left",crop_obj.canvas.offsetLeft);
+	$("#"+crop_obj.can_cover).css("top",getPageCoord(crop_obj.canvas).Y);
+	$("#"+crop_obj.can_cover).css("left",getPageCoord(crop_obj.canvas).X);
 	this.canvas.width = crop_obj.width;
 	this.canvas.height = crop_obj.height
 	// this.canvas.onmousedown = function(e){
